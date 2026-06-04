@@ -64,12 +64,19 @@ export default function Gallery() {
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 20 }}>
           {projects.map(project => (
             <div key={project.id} onClick={() => setSelected(project)}
-              style={{ background: "#161616", border: "1px solid #222", borderRadius: 10, overflow: "hidden", cursor: "pointer", transition: "border 0.2s", position: "relative" }}
+              style={{ background: "#161616", border: "1px solid #222", borderRadius: 10, overflow: "hidden", cursor: "pointer", transition: "border 0.2s" }}
               onMouseEnter={e => e.currentTarget.style.border = "1px solid #7ee787"}
               onMouseLeave={e => e.currentTarget.style.border = "1px solid #222"}>
-              {project.outputImageUrl && (
+              {project.outputImageUrl ? (
                 <img src={project.outputImageUrl} alt={project.title}
                   style={{ width: "100%", height: 180, objectFit: "cover" }} />
+              ) : project.videoUrl ? (
+                <video src={project.videoUrl}
+                  style={{ width: "100%", height: 180, objectFit: "cover" }} />
+              ) : (
+                <div style={{ width: "100%", height: 180, background: "#0d0d0d", display: "flex", alignItems: "center", justifyContent: "center", color: "#333", fontFamily: "monospace" }}>
+                  // no preview
+                </div>
               )}
               <div style={{ padding: 16 }}>
                 <h3 style={{ color: "#fff", marginBottom: 8, fontSize: 16 }}>{project.title}</h3>
@@ -107,6 +114,28 @@ export default function Gallery() {
                 <h4 style={{ color: "#aaa", marginBottom: 10, fontSize: 13, fontFamily: "monospace" }}>// output</h4>
                 <img src={selected.outputImageUrl} alt="output"
                   style={{ width: "100%", borderRadius: 8, marginBottom: 24, border: "1px solid #333" }} />
+              </>
+            )}
+
+            {selected.videoUrl && (
+              <>
+                <h4 style={{ color: "#aaa", marginBottom: 10, fontSize: 13, fontFamily: "monospace" }}>// video</h4>
+                <video src={selected.videoUrl} controls
+                  style={{ width: "100%", borderRadius: 8, marginBottom: 24, border: "1px solid #333" }} />
+              </>
+            )}
+
+            {selected.links && selected.links.length > 0 && (
+              <>
+                <h4 style={{ color: "#aaa", marginBottom: 10, fontSize: 13, fontFamily: "monospace" }}>// links</h4>
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 24 }}>
+                  {selected.links.map((link, i) => (
+                    <a key={i} href={link.url} target="_blank" rel="noreferrer"
+                      style={{ padding: "6px 14px", border: "1px solid #333", borderRadius: 6, color: "#7ee787", fontSize: 13 }}>
+                      🔗 {link.label || link.url}
+                    </a>
+                  ))}
+                </div>
               </>
             )}
 
